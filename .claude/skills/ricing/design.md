@@ -33,7 +33,7 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 - Hyprland 0.57.2, **Lua config** (`hl.config`, `hl.bind`, …); API stubs: `/usr/share/hypr/stubs/hl.meta.lua`.
 - Quickshell 0.3.2 / Qt 6.12, kitty 0.51.1, wofi 1.5.3, hyprpaper 0.8.5, hyprlock 0.9.7, hypridle 0.1.8, mako 1.11 (D-Bus activated), imagemagick 7.
 - Dotfiles: stow packages `hypr kitty wofi quickshell` (`<pkg>/.config/<pkg>` → `~/.config/<pkg>`), relink with `./stow.sh`.
-- `.claude/` is excluded via `.git/info/exclude` → this file is not versioned.
+- `.claude/` is excluded via `.git/info/exclude` (local, unversioned) except `.claude/skills/ricing/*.md` → design.md + SKILL.md are tracked; ref images are not.
 
 # Progress
 - [x] 0 hygiene  - [x] 1 palette (`palette.md`)  - [ ] 2 hypr look  - [ ] 3 ASCII wallpaper  - [ ] 4 kitty
