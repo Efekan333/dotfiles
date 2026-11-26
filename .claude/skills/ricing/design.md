@@ -36,6 +36,10 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 - `.claude/` is excluded via `.git/info/exclude` (local, unversioned) except `.claude/skills/ricing/*.md` → design.md + SKILL.md are tracked; ref images are not.
 
 # Progress
-- [x] 0 hygiene  - [x] 1 palette (`palette.md`)  - [ ] 2 hypr look  - [ ] 3 ASCII wallpaper  - [ ] 4 kitty
+- [x] 0 hygiene  - [x] 1 palette (`palette.md`)  - [x] 2 hypr look  - [~] 3 ASCII wallpaper (pipeline works; image/style TBD)  - [ ] 4 kitty
 - [ ] 5 wofi  - [ ] 6 mako  - [ ] 7–8 left bar  - [ ] 9 power widget  - [ ] 10 hyprlock
 - [ ] 11 apps  - [ ] 12 clock  - [ ] 13 borders
+
+# Notes
+- Wallpaper: `scripts/ascii-wall.py IN OUT --cols N` → `~/wallpaper/ascii/`; hyprpaper runs as systemd user unit (`journalctl --user -u hyprpaper`).
+  Brightness→char ramp works for silhouettes (katana), fails on shaded art (lain = noise). Options: edge-based chars, crop/zoom subject, pick high-contrast sources.
