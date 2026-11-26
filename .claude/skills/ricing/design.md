@@ -6,7 +6,7 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 1. **Monochrome, dark, neutral grey.** Near-black bg, off-white fg, pure greys between. No accent colors, no warm/sepia tint.
 2. **Readability beats aesthetics.** Never dark-on-dark or grey-on-grey for text. Thin fonts need bigger size or bold.
 3. **Retro / old-terminal / ASCII vibe.** Wallpapers are ASCII renders of my images (not plain greyscale).
-4. **Font:** Courier-style serif mono (Nimbus Mono PS installed; Courier Prime optional).
+4. **Font:** Courier-style serif mono. Nimbus Mono PS Regular is hairline-thin → too faint for `dim` text; prefer its Bold weight or Courier Prime (heavier strokes).
 5. **Everything matches.** Firefox, Obsidian, Dolphin, GTK/Qt apps follow the palette so nothing breaks immersion. No global e-ink shader (overkill).
 6. **Launcher:** wofi only (no rofi/hyprlauncher).
 7. **Window borders:** undecided. Idea: gradient or something thematic. Decide after palette + wallpaper exist.
@@ -36,6 +36,6 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 - `.claude/` is excluded via `.git/info/exclude` → this file is not versioned.
 
 # Progress
-- [x] 0 hygiene  - [ ] 1 palette  - [ ] 2 hypr look  - [ ] 3 ASCII wallpaper  - [ ] 4 kitty
+- [x] 0 hygiene  - [x] 1 palette (`palette.md`)  - [ ] 2 hypr look  - [ ] 3 ASCII wallpaper  - [ ] 4 kitty
 - [ ] 5 wofi  - [ ] 6 mako  - [ ] 7–8 left bar  - [ ] 9 power widget  - [ ] 10 hyprlock
 - [ ] 11 apps  - [ ] 12 clock  - [ ] 13 borders
