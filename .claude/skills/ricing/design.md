@@ -42,4 +42,4 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 
 # Notes
 - Wallpaper: `scripts/ascii-wall.py IN OUT --cols N` → `~/wallpaper/ascii/`; hyprpaper runs as systemd user unit (`journalctl --user -u hyprpaper`).
-  Brightness→char ramp works for silhouettes (katana), fails on shaded art (lain = noise). Options: edge-based chars, crop/zoom subject, pick high-contrast sources.
+  Brightness→char ramp works for silhouettes (katana), fails on shaded art (lain = noise). Default is now `--mode edge` (Sobel structure tensor → - / | \ in fg, sparse fill in dim): outlines read, small subjects (lain) still too few chars → next: crop/zoom option.
