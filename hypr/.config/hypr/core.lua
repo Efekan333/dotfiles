@@ -16,8 +16,10 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
     misc = {
-        force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+        force_default_wallpaper = 0,     -- no anime mascot wallpaper
+        disable_hyprland_logo   = true,
+        disable_splash_rendering = true,
+        background_color        = 0xff0c0c0c, -- palette bg; shown when no wallpaper is drawn
     },
 })
 
@@ -32,14 +34,14 @@ hl.config({
 -- Refer to https://wiki.hypr.land/configuring/core/config-options/
 hl.config({
     general = {
-        gaps_in  = 5,
-        gaps_out = 20,
+        gaps_in  = 10,
+        gaps_out = 30, -- inspo: windows float over lots of wallpaper
 
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = "rgb(d6d6d6)", -- palette fg   (border design: later)
+            inactive_border = "rgb(3a3a3a)", -- palette line
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -60,14 +62,14 @@ hl.config({
         inactive_opacity = 1.0,
 
         shadow = {
-            enabled      = true,
+            enabled      = false, -- flat, printed look
             range        = 4,
             render_power = 3,
             color        = 0xee1a1a1a,
         },
 
         blur = {
-            enabled   = true,
+            enabled   = false, -- no frosted glass; also saves GPU passes
             size      = 3,
             passes    = 1,
             vibrancy  = 0.1696,
