@@ -98,7 +98,7 @@ PanelWindow {
     }
 
     // ---- bottom stack ----
-    // ---- middle: active window title, rotated 90° cw (reads top→bottom, glyph baseline faces the screen edge) ----
+    // ---- middle: active app name, rotated 90° cw (reads top→bottom, glyph baseline faces the screen edge) ----
     // activeToplevel comes from socket2 `activewindowv2` events → no polling. Fills the gap between top and bottom stacks.
     Item {
         anchors {
@@ -112,7 +112,8 @@ PanelWindow {
             rotation: 90
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
-            text: Hyprland.activeToplevel?.title ?? ""
+            // app id (= Hyprland "class"), not the title: titles carry page names + " — Mozilla Firefox"
+            text: (Hyprland.activeToplevel?.wayland?.appId ?? "").toLowerCase()
             font { family: bar.textFont; pixelSize: 15; bold: true }
             color: "#a8a8a8"                            // mid
         }
