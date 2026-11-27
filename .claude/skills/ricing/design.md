@@ -5,7 +5,7 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 # Taste (rules)
 1. **Monochrome, dark, neutral grey.** Near-black bg, off-white fg, pure greys between. No accent colors, no warm/sepia tint.
 2. **Readability beats aesthetics.** Never dark-on-dark or grey-on-grey for text. Thin fonts need bigger size or bold.
-3. **Retro / old-terminal / ASCII vibe.** Wallpapers are ASCII renders of my images (not plain greyscale).
+3. **Retro / old-terminal / ASCII vibe.** Wallpapers are my ASCII-art images, recolored to the palette.
 4. **Font:** Courier-style serif mono. Nimbus Mono PS Regular is hairline-thin → too faint for `dim` text; prefer its Bold weight or Courier Prime (heavier strokes).
 5. **Everything matches.** Firefox, Obsidian, Dolphin, GTK/Qt apps follow the palette so nothing breaks immersion. No global e-ink shader (overkill).
 6. **Launcher:** wofi only (no rofi/hyprlauncher).
@@ -35,12 +35,32 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 - Dotfiles: stow packages `hypr kitty wofi quickshell` (`<pkg>/.config/<pkg>` → `~/.config/<pkg>`), relink with `./stow.sh`.
 - `.claude/` is excluded via `.git/info/exclude` (local, unversioned) except `.claude/skills/ricing/*.md` → design.md + SKILL.md are tracked; ref images are not.
 
-# Progress
-- [x] 0 hygiene  - [x] 1 palette (`palette.md`)  - [x] 2 hypr look  - [~] 3 ASCII wallpaper (pipeline works; image/style TBD)  - [ ] 4 kitty
-- [ ] 5 wofi  - [ ] 6 mako  - [ ] 7–8 left bar  - [ ] 9 power widget  - [ ] 10 hyprlock
-- [ ] 11 apps  - [ ] 12 clock  - [ ] 13 borders
+# Progress (handoff — read this first in a new session)
+Workflow: user dictates each step; do only that, verify (reload + screenshot via `grim -s 0.5`), report, stop. Ask before editing.
+- [x] 0 hygiene: .idea untracked, dead symlinks removed, `stow.sh` (idempotent `stow -R`).
+- [x] 1 palette: `palette.md` (bg #0c0c0c, surface #161616, line #3a3a3a, dim #808080, mid #a8a8a8, fg #d6d6d6, bright #f0f0f0).
+- [x] 2 hypr look (`core.lua`): no blur/shadow, gaps 10/30, border fg/line, no mascot. Rounding still 10 (borders = step 13).
+- [x] 3 wallpaper: `scripts/recolor-walls.sh` → `~/wallpaper/palette/`; per-workspace switching via `wallpaper.lua` (verified working).
+      Mapping ws1 katana, 2 shark, 3 dying_man, 4 angel, 5 woman_blueish, 6 woman_red, 7-10 wrap.
+- [~] 4 kitty: font DONE (Courier Prime Code 12, bold = Courier Prime SemiBold; reload = `kill -USR1 $(pgrep -x kitty)`).
+      TODO: 16 ANSI colors as greys from palette (tradeoff: red/green diff meaning lost → rely on bold/reverse), padding.
+- [ ] 5 wofi: style.css (palette, square, inverted selection); `menu = "wofi"` in programs.lua; cliphist bind rofi → `wofi --dmenu`.
+- [ ] 6 mako: palette colors/border (currently default blue).
+- [ ] 7 Quickshell left bar v1: shell.qml bug: anchors top+bottom+left but sets implicitHeight → needs implicitWidth;
+      replace `date` Process+Timer (fork/exec every second) with `SystemClock`; autostart; workspaces via Quickshell.Hyprland.
+- [ ] 8 bar hover-expand animation (Behavior/NumberAnimation); keep exclusiveZone fixed so expansion overlays, no window reflow.
+- [ ] 9 power widget: transparent, hover-expand → lock (hyprlock) / screen off (dpms off) / suspend / poweroff; hypridle config.
+- [ ] 10 hyprlock theme.  - [ ] 11 apps one by one: GTK3/4, Dolphin (kdeglobals), Firefox userChrome, Obsidian snippet, cursor.
+- [ ] 12 optional analog clock widget (QML Canvas).  - [ ] 13 window border design (user idea: gradient / thematic).
+- [ ] maybe: Lain as small corner icon (Quickshell Image).
 
 # Notes
-- Wallpaper: `scripts/ascii-wall.py IN OUT --cols N` → `~/wallpaper/ascii/`; hyprpaper runs as systemd user unit (`journalctl --user -u hyprpaper`).
-  Brightness→char ramp works for silhouettes (katana), fails on shaded art (lain = noise). Default is now `--mode edge` (Sobel structure tensor → - / | \ in fg, sparse fill in dim): outlines read. Lain is NOT a wallpaper candidate (see below), so no crop/zoom needed.
-- Lain (`wallhaven-lain.png`): not a wallpaper. Maybe later as a small corner icon/widget (e.g. Quickshell). Undecided.
+- Wallpapers: the source images in `~/wallpaper/` ARE already ASCII art. Default = recolor only (auto-level, black→bg, white→fg).
+  Per-image recipes in `recolor-walls.sh`: katana = `scripts/ascii-ramp.py --cols 260` (thin brightness-ramp chars, user's favourite);
+  shark = density-blur × top-light gradient (depth in greys, white capped #c0c0c0).
+- REJECTED: edge-mode ASCII (strong `\ | / -` chars) → user hated it. Thinning glyphs by erosion → breaks letters. Inverted renders → wall of chars.
+- Per-workspace wallpaper: `hl.on("workspace.active", fn(ws))` — callback gets the workspace object (ws.id, ws.monitor.name, ws.special).
+  hyprpaper = systemd user unit; check with `hyprctl hyprpaper listactive`; logs `journalctl --user -u hyprpaper`.
+- Gotchas: sudo needs a real terminal (the `!` prefix has no TTY) → user runs sudo in kitty. Never `pkill -f <pattern>` from a shell
+  whose own cmdline contains the pattern. ImageMagick label text: avoid `%`, double `\`.
+- Lain (`wallhaven-lain.png`): not a wallpaper. Maybe later as a small corner icon/widget. Undecided.

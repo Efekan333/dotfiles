@@ -20,3 +20,7 @@ require('programs')
 
 require('keybinds')
 
+
+require('wallpaper')
+-- per-workspace wallpaper (hyprpaper IPC)
+
