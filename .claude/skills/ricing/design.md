@@ -56,6 +56,9 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       (Quickshell.Networking/Bluetooth over D-Bus, click toggles radio) · clock · calendar btn → PopupWindow + `Calendar.qml`
       (Mon-first grid, today inverted, HyprlandFocusGrab closes on outside click). Icons = ProggyClean CE Nerd Font Mono 26px.
       Qt warning: quickshell 0.3.2-1 built vs Qt 6.12.0, system 6.12.1 → reinstall doesn't fix, needs repo rebuild.
+- [x] 7b popup animation: `BlobPopup.qml` (calendar + power) scales 0.1→1 from the source icon centre (Scale.origin via mapToItem at open),
+      OutBack 260 ms open / InCubic 140 ms close, unmap after close anim. Drive `open`, never `visible`.
+- [ ] 7c hypr windowsIn blob (Plan B, not done): `popin 60%` + underdamped spring (ζ≈0.55–0.6, k=300 c≈19); windowsOut linear no bounce.
 - [ ] 8 bar hover-expand animation (Behavior/NumberAnimation); keep exclusiveZone fixed so expansion overlays, no window reflow.
 - [ ] 9 power widget: transparent, hover-expand → lock (hyprlock) / screen off (dpms off) / suspend / poweroff; hypridle config.
 - [ ] 10 hyprlock theme.  - [ ] 11 apps one by one: GTK3/4, Dolphin (kdeglobals), Firefox userChrome, Obsidian snippet, cursor.

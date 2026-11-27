@@ -125,10 +125,11 @@ PanelWindow {
         spacing: 10
 
         IconButton {
+            id: calendarBtn
             anchors.horizontalCenter: parent.horizontalCenter
             icon: bar.glyph(0xF00ED)                      // calendar
-            active: calendar.visible
-            onClicked: calendar.visible = !calendar.visible
+            active: calendar.open
+            onClicked: calendar.open = !calendar.open
         }
 
         // clock: HH over MM
@@ -212,34 +213,21 @@ PanelWindow {
         }
 
         IconButton {
+            id: powerBtn
             anchors.horizontalCenter: parent.horizontalCenter
             icon: bar.glyph(0xF0425)
-            active: powerMenu.visible
-            onClicked: powerMenu.visible = !powerMenu.visible
+            active: powerMenu.open
+            onClicked: powerMenu.open = !powerMenu.open
         }
     }
 
     // ---- calendar popup (xdg_popup: drawn above all windows, anchored to the bar) ----
-    PopupWindow {
+    BlobPopup {
         id: calendar
-        visible: false
+        source: calendarBtn
         anchor { window: bar; rect.x: bar.width + 8; rect.y: bar.height - implicitHeight - 10 }
         implicitWidth: cal.implicitWidth + 32
         implicitHeight: cal.implicitHeight + 24
-        color: "#0c0c0c"
-
-        // click outside → close (compositor tells us when the grab is cleared)
-        HyprlandFocusGrab {
-            windows: [calendar]
-            active: calendar.visible
-            onCleared: calendar.visible = false
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            border { width: 1; color: "#d6d6d6" }
-        }
 
         Calendar { id: cal; anchors.centerIn: parent; date: clock.date; font: bar.textFont }
     }
@@ -248,25 +236,12 @@ PanelWindow {
     // shutdown/logout go through hyprshutdown: it sends xdg_toplevel.close to every window (= SUPER+C),
     // waits for them to exit (save dialogs block it), then exits Hyprland and runs the post command.
     // Plain `systemctl poweroff` would SIGTERM the session cgroup instead → no save prompts, "crashed" Firefox.
-    PopupWindow {
+    BlobPopup {
         id: powerMenu
-        visible: false
+        source: powerBtn
         anchor { window: bar; rect.x: bar.width + 8; rect.y: bar.height - implicitHeight - 10 }
         implicitWidth: actions.implicitWidth + 16
         implicitHeight: actions.implicitHeight + 16
-        color: "#0c0c0c"
-
-        HyprlandFocusGrab {
-            windows: [powerMenu]
-            active: powerMenu.visible
-            onCleared: powerMenu.visible = false
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            border { width: 1; color: "#d6d6d6" }
-        }
 
         Column {
             id: actions
@@ -303,7 +278,7 @@ PanelWindow {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            powerMenu.visible = false;
+                            powerMenu.open = false;
                             Quickshell.execDetached(["sh", "-c", row.modelData.cmd]);
                         }
                     }
