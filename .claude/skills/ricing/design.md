@@ -50,8 +50,8 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       Not done (user didn't pick): padding, text_composition_strategy, tab bar styling.
 - [ ] 5 wofi: style.css (palette, square, inverted selection); `menu = "wofi"` in programs.lua; cliphist bind rofi → `wofi --dmenu`.
 - [ ] 6 mako: palette colors/border (currently default blue).
-- [ ] 7 Quickshell left bar v1: shell.qml bug: anchors top+bottom+left but sets implicitHeight → needs implicitWidth;
-      replace `date` Process+Timer (fork/exec every second) with `SystemClock`; autostart; workspaces via Quickshell.Hyprland.
+- [x] 7 Quickshell left bar v1 (`LeftBar.qml`, 40px, opaque bg + 1px line edge): workspaces via Hyprland.workspaces (focused = inverted, click = activate),
+      SystemClock (Minutes) HH over MM at bottom; autostart `qs` on hyprland.start (programs.lua). Order changed: Quickshell before wofi/mako.
 - [ ] 8 bar hover-expand animation (Behavior/NumberAnimation); keep exclusiveZone fixed so expansion overlays, no window reflow.
 - [ ] 9 power widget: transparent, hover-expand → lock (hyprlock) / screen off (dpms off) / suspend / poweroff; hypridle config.
 - [ ] 10 hyprlock theme.  - [ ] 11 apps one by one: GTK3/4, Dolphin (kdeglobals), Firefox userChrome, Obsidian snippet, cursor.

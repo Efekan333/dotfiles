@@ -25,6 +25,11 @@ menu        = "hyprlauncher"
 --   hl.exec_cmd("waybar & hyprpaper & firefox")
 -- end)
 
+-- Quickshell bar. hyprland.start fires once per session (not on config reload) → no duplicate bars.
+hl.on("hyprland.start", function()
+    hl.exec_cmd("qs")
+end)
+
 
 
 
