@@ -92,8 +92,14 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       kitty stays explicit (Code variant + SemiBold bold). Switch font = fonts.conf + kitty.conf, `fc-cache -f`, restart apps.
       **Icons:** `scripts/mono-icons.py` → ~/.local/share/icons/Papirus-Mono (places/mimetypes/devices, every hex → luma grey
       in [#50,#e0], inherits Papirus-Dark for the rest). Re-run after papirus updates.
-- [ ] 11 rest (order): Zen userChrome + Dark Reader (palette, grayscale 100%)
-      → Zotero userChrome + reader appearance theme (grey pages = the "e-ink" look) → Obsidian snippet → cursor.
+      dconf values are reapplied by `scripts/gsettings.sh` (run from stow.sh; also builds Papirus-Mono if missing).
+- [x] 11b Zen (profile = `[Install…] Default=` in ~/.zen/profiles.ini): `zen/` dir, symlinked by `scripts/link-zen.sh`
+      (stow can't target the random profile dir; run from stow.sh). `user.js` = stylesheets pref, dark scheme, default fonts
+      Rice Mono. `chrome/userChrome.css` overrides Zen vars (--zen-main-browser-background = frame #262626, --zen-colors-*,
+      toolbar/panel greys, AccentColor → fg) with !important (beats the workspace-gradient JS); active tab inverted.
+      Var names come from omni.ja zen-styles/zen-theme.css → recheck after big Zen updates.
+      Pages: Dark Reader, settings in `zen/darkreader.json` (import manually; grayscale 100, bg/fg = palette).
+- [ ] 11 rest (order): Zotero userChrome + reader appearance theme (grey pages = the "e-ink" look) → Obsidian snippet → cursor.
       Firefox dropped (Zen is the browser). Per-app e-ink via Hyprland `screen_shader` REJECTED again: it's output-global,
       a focus-swap hack shades bar/frame/other windows and flickers.
 - [ ] 12 optional analog clock widget (QML Canvas).  - [ ] 13 window border design (user idea: gradient / thematic).
