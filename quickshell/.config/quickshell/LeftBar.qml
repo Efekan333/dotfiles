@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Bluetooth
 import Quickshell.Networking
+import Quickshell.Services.UPower
 import QtQuick
 
 PanelWindow {
@@ -19,6 +20,10 @@ PanelWindow {
     readonly property string textFont: "Courier Prime"
     readonly property string iconFont: "ProggyClean CE Nerd Font Mono"
     function glyph(cp) { return String.fromCodePoint(cp) }   // Nerd Font MD icons live in the PUA
+
+    // lock, then blank the panel; hyprlock stays as the gate when input wakes it
+    readonly property string idleCmd:
+        `(pidof hyprlock || hyprlock) & sleep 1; hyprctl dispatch 'hl.dsp.dpms({ action = "off" })'`
 
     // Raise-or-run: focus the window if its class exists, else start it (one instance only).
     // Goes through sh because hyprctl's exit code is the only cheap "does it exist" test.
@@ -66,6 +71,7 @@ PanelWindow {
 
     // ---- top: workspaces (event-driven via Hyprland socket2, no polling) ----
     Column {
+        id: wsCol
         anchors { top: parent.top; topMargin: 12; horizontalCenter: parent.horizontalCenter }
         spacing: 4
         Repeater {
@@ -92,7 +98,28 @@ PanelWindow {
     }
 
     // ---- bottom stack ----
+    // ---- middle: active window title, rotated 90° cw (reads top→bottom, glyph baseline faces the screen edge) ----
+    // activeToplevel comes from socket2 `activewindowv2` events → no polling. Fills the gap between top and bottom stacks.
+    Item {
+        anchors {
+            top: wsCol.bottom; bottom: bottomStack.top; topMargin: 16; bottomMargin: 16
+            horizontalCenter: parent.horizontalCenter
+        }
+        width: parent.width
+        Text {
+            anchors.centerIn: parent
+            width: parent.height                       // pre-rotation width = available vertical space
+            rotation: 90
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
+            text: Hyprland.activeToplevel?.title ?? ""
+            font { family: bar.textFont; pixelSize: 15; bold: true }
+            color: "#a8a8a8"                            // mid
+        }
+    }
+
     Column {
+        id: bottomStack
         anchors { bottom: parent.bottom; bottomMargin: 10; horizontalCenter: parent.horizontalCenter }
         spacing: 10
 
@@ -116,6 +143,44 @@ PanelWindow {
                     color: "#d6d6d6"
                 }
             }
+        }
+
+        // battery %: UPower's displayDevice = aggregate of all laptop batteries (D-Bus property signals, no polling)
+        Rectangle {
+            id: battery
+            readonly property var dev: UPower.displayDevice
+            readonly property int pct: Math.round(dev.percentage * 100)   // Quickshell reports 0..1
+            readonly property bool charging: dev.state === UPowerDeviceState.Charging
+                                          || dev.state === UPowerDeviceState.FullyCharged
+            readonly property bool low: !charging && pct <= 10
+            property bool warned: false               // fire each threshold once per discharge
+            property bool idled: false
+            visible: dev.ready && dev.isLaptopBattery
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 32; height: 22
+            color: low ? "#f0f0f0" : "transparent"
+            Text {
+                anchors.centerIn: parent
+                text: (battery.charging ? "+" : "") + battery.pct
+                font { family: bar.textFont; pixelSize: 15; bold: true }
+                color: battery.low ? "#0c0c0c" : (battery.charging ? "#f0f0f0" : "#808080")
+            }
+            function check() {
+                if (!visible) return;
+                if (charging) { warned = false; idled = false; return; }
+                if (pct <= 10 && !warned) {
+                    warned = true;
+                    Quickshell.execDetached(["notify-send", "-u", "critical", "-a", "battery",
+                                             "Battery low", pct + "% left - plug in"]);
+                }
+                if (pct <= 2 && !idled) {
+                    idled = true;
+                    Quickshell.execDetached(["sh", "-c", bar.idleCmd]);
+                }
+            }
+            onPctChanged: check()
+            onChargingChanged: check()
+            onVisibleChanged: check()
         }
 
         // status group on a grey plate so it stands out from the bar
@@ -207,8 +272,7 @@ PanelWindow {
             anchors.centerIn: parent
             Repeater {
                 model: [
-                    // lock, then blank the panel; hyprlock stays as the gate when input wakes it
-                    { label: "idle",     icon: 0xF0904, cmd: `(pidof hyprlock || hyprlock) & sleep 1; hyprctl dispatch 'hl.dsp.dpms({ action = "off" })'` },
+                    { label: "idle",     icon: 0xF0904, cmd: bar.idleCmd },
                     { label: "logout",   icon: 0xF0343, cmd: "hyprshutdown -t 'Logging out...'" },
                     { label: "shutdown", icon: 0xF0425, cmd: "hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff'" }
                 ]
