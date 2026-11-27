@@ -39,4 +39,5 @@ export PATH="$HOME/.local/bin:$PATH"
 if [[ $TERM == xterm-kitty && -z $FASTFETCH_SHOWN ]]; then
   export FASTFETCH_SHOWN=1
   fastfetch
+  printf '\n\n'   # output ends without newline + fastfetch drops trailing "break" → gap before prompt
 fi
