@@ -6,7 +6,7 @@
 -- Images come from scripts/recolor-walls.sh. Workspaces beyond #walls wrap around.
 
 local dir   = os.getenv("HOME") .. "/wallpaper/palette/"
-local walls = { "katana", "shark", "dying_man", "angel", "woman_blueish", "woman_red" }
+local walls = { "katana", "shark", "dying_man", "angel", "woman_blueish" }
 
 hl.on("workspace.active", function(ws)
     if not ws or ws.special or not ws.id or ws.id < 1 then return end

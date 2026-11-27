@@ -25,6 +25,7 @@ for f in "$src"/wallhaven-*.png; do
   n=$(basename "$f" .png); n=${n#wallhaven-}
   case $n in
     lain)   continue ;;                 # icon only, not a wallpaper
+    woman_red) continue ;;              # dark duplicate of woman_blueish
     katana) katana  "$f" "$out/$n.png" & ;;
     shark)  shark   "$f" "$out/$n.png" & ;;
     *)      default "$f" "$out/$n.png" & ;;

@@ -41,7 +41,7 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
 - [x] 1 palette: `palette.md` (bg #0c0c0c, surface #161616, line #3a3a3a, dim #808080, mid #a8a8a8, fg #d6d6d6, bright #f0f0f0).
 - [x] 2 hypr look (`core.lua`): no blur/shadow, gaps 10/30, border fg/line, no mascot. Rounding still 10 (borders = step 13).
 - [x] 3 wallpaper: `scripts/recolor-walls.sh` → `~/wallpaper/palette/`; per-workspace switching via `wallpaper.lua` (verified working).
-      Mapping ws1 katana, 2 shark, 3 dying_man, 4 angel, 5 woman_blueish, 6 woman_red, 7-10 wrap.
+      Mapping ws1 katana, 2 shark, 3 dying_man, 4 angel, 5 woman_blueish, 6-10 wrap (woman_red dropped: darker duplicate).
 - [x] 4 kitty: Courier Prime Code 12 (bold = Courier Prime SemiBold); `theme.conf` (included) = 16 ANSI as palette greys
       (red=bright, green/blue/mag/cyan=mid, yellow=fg, slot 8=dim, slot 0=surface), inverted selection, block cursor + cursor_trail.
       Font was silently Noto until `fontconfig/fonts.conf` marked Courier Prime (Code) spacing=mono (files lack isFixedPitch).
