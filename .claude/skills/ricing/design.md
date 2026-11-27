@@ -52,6 +52,10 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
 - [ ] 6 mako: palette colors/border (currently default blue).
 - [x] 7 Quickshell left bar v1 (`LeftBar.qml`, 40px, opaque bg + 1px line edge): workspaces via Hyprland.workspaces (focused = inverted, click = activate),
       SystemClock (Minutes) HH over MM at bottom; autostart `qs` on hyprland.start (programs.lua). Order changed: Quickshell before wofi/mako.
+      v2 (caelestia/soramane layout, squared): bottom-up power (2-click arm, 3 s) · [wifi bt] on surface plate w/ line border
+      (Quickshell.Networking/Bluetooth over D-Bus, click toggles radio) · clock · calendar btn → PopupWindow + `Calendar.qml`
+      (Mon-first grid, today inverted, HyprlandFocusGrab closes on outside click). Icons = ProggyClean CE Nerd Font Mono 26px.
+      Qt warning: quickshell 0.3.2-1 built vs Qt 6.12.0, system 6.12.1 → reinstall doesn't fix, needs repo rebuild.
 - [ ] 8 bar hover-expand animation (Behavior/NumberAnimation); keep exclusiveZone fixed so expansion overlays, no window reflow.
 - [ ] 9 power widget: transparent, hover-expand → lock (hyprlock) / screen off (dpms off) / suspend / poweroff; hypridle config.
 - [ ] 10 hyprlock theme.  - [ ] 11 apps one by one: GTK3/4, Dolphin (kdeglobals), Firefox userChrome, Obsidian snippet, cursor.
