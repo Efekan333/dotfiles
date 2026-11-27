@@ -101,13 +101,18 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       Pages: Dark Reader, settings in `zen/darkreader.json` (import manually; grayscale 100, bg/fg = palette).
       SKIPPED (user, 2026-11-27): about: pages (about:addons, settings) stay navy/accent-coloured; fix would be
       `userContent.css` scoped with @-moz-document url-prefix("about:"). Dark Reader import not confirmed.
-- [ ] 11c Zotero (NEXT; zotero-bin 9.0.4, Firefox/Gecko-based → same mechanism as Zen):
-      profile = ~/.zotero/zotero/<random>.default (profiles.ini) → extend `link-zen.sh`-style linking (or a link-zotero.sh).
-      user.js: toolkit.legacyUserProfileCustomizations.stylesheets = true (+ dark scheme pref).
-      chrome/userChrome.css: palette greys for item tree, collections pane, item pane, tabs; selection = inversion.
-      Reader "e-ink": Zotero's reader appearance/theme setting (bg/fg per theme) → grey page bg + fg text; verify that
-      custom themes exist in v9 before relying on it. Fallback = reader-only CSS filter (grayscale + invert) in userContent.
-      Global screen_shader stays rejected.
+- [x] 11c Zotero (zotero-bin 9.0.4, Gecko): `zotero/` dir, linked by `scripts/link-zotero.sh` (Default=1 profile; run from stow.sh).
+      `user.js`: stylesheets pref, `browser.theme.toolbar-theme 0` (was 1 = forced light → dark :root vars never loaded),
+      reader.contentDarkMode. `chrome/palette-vars.css` = Zotero's own vars (--color-background/sidepane/toolbar/tabbar/…,
+      --fill-primary/secondary/tertiary → fg/mid/dim, accent/accent-blue → bright + accent-text bg = inversion, --tag-* greys)
+      + grayscale filter on tag swatches and icons (`grayscale(1) brightness(1.4)`). userChrome.css @imports it.
+      Reader/note-editor = resource://zotero/ content iframes → userChrome doesn't reach them; userContent.css is GENERATED
+      into the profile by link-zotero.sh (@import illegal inside @-moz-document) → re-run after editing palette-vars.css.
+      Reader extras: Rice Mono body; `#numPages div` static (absolute + JS width overflowed with mono).
+      Var names from omni.ja zotero-platform/unix/zotero.css + resource/reader/reader.css → recheck after big updates.
+      Reader page = custom theme "Rice" bg #262626 / fg #f0f0f0 (SyncedSettings in zotero.sqlite, NOT in dotfiles; set via
+      reader Aa → Themes → Add Theme; picked while UI dark → reader.darkTheme=custom2). Images keep colours (Invert Images off).
+      Unconfirmed by user: icon greyscale brightness, page counter fix.
 - [ ] 11 rest (order): Obsidian snippet → cursor.
       Firefox dropped (Zen is the browser). Per-app e-ink via Hyprland `screen_shader` REJECTED again: it's output-global,
       a focus-swap hack shades bar/frame/other windows and flickers.

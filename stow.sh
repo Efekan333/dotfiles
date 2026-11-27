@@ -7,3 +7,4 @@ pkgs=(hypr kitty wofi quickshell bash fastfetch fontconfig mako gtk)
 stow -v -R -t "$HOME" "${pkgs[@]}"
 ./scripts/gsettings.sh
 ./scripts/link-zen.sh
+./scripts/link-zotero.sh

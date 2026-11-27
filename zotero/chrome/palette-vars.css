@@ -1,0 +1,47 @@
+/* Zotero colour variables → palette.md greys. Shared by userChrome.css (main window, chrome docs)
+   and userContent.css (reader + note-editor iframes, resource://zotero/…). Var names from
+   omni.ja chrome/content/zotero-platform/unix/zotero.css + resource/reader/reader.css → recheck after big updates. */
+:root {
+  /* surfaces: list = bg, side panes = surface, bars = frame (matches the Quickshell bar) */
+  --color-background: #0c0c0c !important;
+  --color-background30: rgba(12, 12, 12, 0.3) !important;
+  --color-background50: rgba(12, 12, 12, 0.5) !important;
+  --color-background70: rgba(12, 12, 12, 0.7) !important;
+  --color-sidepane: #161616 !important;
+  --color-toolbar: #262626 !important;
+  --color-tabbar: #262626 !important;
+  --color-menu: #161616 !important;
+  --color-menu-opaque: #161616 !important;
+  --color-button: #3a3a3a !important;
+  --color-control: #d6d6d6 !important;
+  --color-panedivider: #3a3a3a !important;
+  --color-border: #3a3a3a !important;
+  --color-border50: #262626 !important;
+  --color-stripe-on-background: #161616 !important;
+  --color-quinary-on-background: #262626 !important;
+  --color-quarternary-on-background: #3a3a3a !important;
+  --color-quinary-on-sidepane: #262626 !important;
+  --color-quarternary-on-sidepane: #3a3a3a !important;
+  --color-scrollbar: #808080 !important;
+  --color-scrollbar-hover: #a8a8a8 !important;
+  /* text/icons: explicit greys instead of white alphas (readability rule) */
+  --fill-primary: #d6d6d6 !important;
+  --fill-secondary: #a8a8a8 !important;
+  --fill-tertiary: #808080 !important;
+  /* highlight = inversion; every blue → bright */
+  --color-accent: #f0f0f0 !important;
+  --color-accent-text: #0c0c0c !important;
+  --accent-blue: #f0f0f0 !important;
+  --accent-azure: #d6d6d6 !important;
+  --color-focus-border: #d6d6d6 !important;
+  --color-focus-search: #d6d6d6 !important;
+  /* tag colour-picker palette → greys (assigned tag colours are greyed by filter below) */
+  --tag-red: #f0f0f0 !important; --tag-orange: #d6d6d6 !important; --tag-yellow: #d6d6d6 !important;
+  --tag-green: #a8a8a8 !important; --tag-teal: #a8a8a8 !important; --tag-blue: #a8a8a8 !important;
+  --tag-indigo: #808080 !important; --tag-purple: #808080 !important; --tag-magenta: #808080 !important;
+  --tag-plum: #808080 !important; --tag-gray: #808080 !important;
+}
+/* Assigned tag colours (inline hex) and item-type/collection/tab icons (coloured SVGs) → desaturate.
+   brightness lifts dark luma (red/blue ≈ #606060) back to ~dim/mid so icons stay readable on bg. */
+.tag-swatch, .colored-tag-swatches { filter: grayscale(1) !important; }
+.icon, .icon-css, .icon-item-type, .icon-collection, .tab-icon { filter: grayscale(1) brightness(1.4) !important; }
