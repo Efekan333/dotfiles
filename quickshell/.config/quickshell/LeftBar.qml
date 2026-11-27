@@ -20,6 +20,14 @@ PanelWindow {
     readonly property string iconFont: "ProggyClean CE Nerd Font Mono"
     function glyph(cp) { return String.fromCodePoint(cp) }   // Nerd Font MD icons live in the PUA
 
+    // Raise-or-run: focus the window if its class exists, else start it (one instance only).
+    // Goes through sh because hyprctl's exit code is the only cheap "does it exist" test.
+    function raiseOrRun(cls, cmd) {
+        Quickshell.execDetached(["sh", "-c",
+            `hyprctl clients -j | jq -e '.[] | select(.class == "${cls}")' >/dev/null`
+            + ` && hyprctl dispatch 'hl.dsp.focus({ window = "class:${cls}" })' || exec ${cmd}`]);
+    }
+
     // Clock in-process: wakes once per minute instead of fork+exec `date` every second.
     SystemClock { id: clock; precision: SystemClock.Minutes }
 
@@ -37,6 +45,7 @@ PanelWindow {
         property bool active: false               // forced inversion (popup open, power armed)
         readonly property bool lit: area.containsMouse || active
         signal clicked()
+        signal rightClicked()
         width: 28; height: 28
         color: lit ? "#f0f0f0" : "transparent"
         Text {
@@ -50,7 +59,8 @@ PanelWindow {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: btn.clicked()
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onClicked: mouse => mouse.button === Qt.RightButton ? btn.rightClicked() : btn.clicked()
         }
     }
 
@@ -122,29 +132,24 @@ PanelWindow {
                 IconButton {
                     icon: bar.glyph(Networking.wifiEnabled ? 0xF05A9 : 0xF05AA)
                     on: Networking.wifiEnabled
-                    onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
+                    onClicked: bar.raiseOrRun("nmtui", "kitty --class nmtui -e nmtui")   // TUI → needs a terminal
+                    onRightClicked: Networking.wifiEnabled = !Networking.wifiEnabled
                 }
                 IconButton {
                     readonly property var adapter: Bluetooth.defaultAdapter
                     icon: bar.glyph(adapter && adapter.enabled ? 0xF00AF : 0xF00B2)
                     on: !!adapter && adapter.enabled
-                    onClicked: if (adapter) adapter.enabled = !adapter.enabled
+                    onClicked: bar.raiseOrRun("blueman-manager", "blueman-manager")
+                    onRightClicked: if (adapter) adapter.enabled = !adapter.enabled
                 }
             }
         }
 
-        // power off: two clicks within 3 s (first click arms) → no accidental shutdowns
         IconButton {
-            id: power
-            property bool armed: false
             anchors.horizontalCenter: parent.horizontalCenter
             icon: bar.glyph(0xF0425)
-            active: armed
-            onClicked: {
-                if (armed) Quickshell.execDetached(["systemctl", "poweroff"]);
-                else { armed = true; disarm.restart(); }
-            }
-            Timer { id: disarm; interval: 3000; onTriggered: power.armed = false }
+            active: powerMenu.visible
+            onClicked: powerMenu.visible = !powerMenu.visible
         }
     }
 
@@ -171,5 +176,74 @@ PanelWindow {
         }
 
         Calendar { id: cal; anchors.centerIn: parent; date: clock.date; font: bar.textFont }
+    }
+
+    // ---- power popup ----
+    // shutdown/logout go through hyprshutdown: it sends xdg_toplevel.close to every window (= SUPER+C),
+    // waits for them to exit (save dialogs block it), then exits Hyprland and runs the post command.
+    // Plain `systemctl poweroff` would SIGTERM the session cgroup instead → no save prompts, "crashed" Firefox.
+    PopupWindow {
+        id: powerMenu
+        visible: false
+        anchor { window: bar; rect.x: bar.width + 8; rect.y: bar.height - implicitHeight - 10 }
+        implicitWidth: actions.implicitWidth + 16
+        implicitHeight: actions.implicitHeight + 16
+        color: "#0c0c0c"
+
+        HyprlandFocusGrab {
+            windows: [powerMenu]
+            active: powerMenu.visible
+            onCleared: powerMenu.visible = false
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+            border { width: 1; color: "#d6d6d6" }
+        }
+
+        Column {
+            id: actions
+            anchors.centerIn: parent
+            Repeater {
+                model: [
+                    // lock, then blank the panel; hyprlock stays as the gate when input wakes it
+                    { label: "idle",     icon: 0xF0904, cmd: `(pidof hyprlock || hyprlock) & sleep 1; hyprctl dispatch 'hl.dsp.dpms({ action = "off" })'` },
+                    { label: "logout",   icon: 0xF0343, cmd: "hyprshutdown -t 'Logging out...'" },
+                    { label: "shutdown", icon: 0xF0425, cmd: "hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff'" }
+                ]
+                Rectangle {
+                    id: row
+                    required property var modelData
+                    width: 140; height: 28
+                    color: rowArea.containsMouse ? "#f0f0f0" : "transparent"
+                    Row {
+                        anchors { left: parent.left; leftMargin: 6; verticalCenter: parent.verticalCenter }
+                        spacing: 8
+                        Text {
+                            text: bar.glyph(row.modelData.icon)
+                            font { family: bar.iconFont; pixelSize: 22 }
+                            color: rowArea.containsMouse ? "#0c0c0c" : "#d6d6d6"
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: row.modelData.label
+                            font { family: bar.textFont; pixelSize: 15; bold: true }
+                            color: rowArea.containsMouse ? "#0c0c0c" : "#d6d6d6"
+                        }
+                    }
+                    MouseArea {
+                        id: rowArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            powerMenu.visible = false;
+                            Quickshell.execDetached(["sh", "-c", row.modelData.cmd]);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
