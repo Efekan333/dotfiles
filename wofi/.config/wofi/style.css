@@ -1,6 +1,6 @@
 /* GTK3 CSS (not browser CSS): no `all: unset`, so theme defaults (blue focus outline/shadow) are killed per widget. */
 * {
-    font-family: "Courier Prime";
+    font-family: "Rice Mono";
     font-weight: bold;
     font-size: 15px;
     outline: none;

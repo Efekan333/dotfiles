@@ -4,7 +4,7 @@ import QtQuick
 Column {
     id: root
     property date date: new Date()
-    property string font: "Courier Prime"
+    property string font: Theme.font
     spacing: 6
 
     readonly property int year: date.getFullYear()

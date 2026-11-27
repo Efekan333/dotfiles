@@ -83,7 +83,19 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       Next idea: wofi `border-radius` on top corners (joins to the strip stay square).- [ ] 7c hypr windowsIn blob (Plan B, not done): `popin 60%` + underdamped spring (ζ≈0.55–0.6, k=300 c≈19); windowsOut linear no bounce.
 - [ ] 8 bar hover-expand animation (Behavior/NumberAnimation); keep exclusiveZone fixed so expansion overlays, no window reflow.
 - [ ] 9 power widget: transparent, hover-expand → lock (hyprlock) / screen off (dpms off) / suspend / poweroff; hypridle config.
-- [ ] 10 hyprlock theme.  - [ ] 11 apps one by one: GTK3/4, Dolphin (kdeglobals), Firefox userChrome, Obsidian snippet, cursor.
+- [ ] 10 hyprlock theme.
+- [x] 11a GTK + font + icons: stow pkg `gtk` → `gtk-3.0/gtk.css` = palette as libadwaita named colours (accent = inversion,
+      headerbar = frame, sidebar/cards = surface, error/warn = greys); `gtk-4.0/gtk.css` @imports it. Needs theme adw-gtk3-dark
+      (built-in Adwaita GTK3 compiles literal colours → ignores @define-color). dconf (not in dotfiles): gtk-theme adw-gtk3-dark,
+      color-scheme prefer-dark, font-name "Rice Mono 11", monospace-font-name "Courier Prime Code 11", icon-theme Papirus-Mono.
+      **Font variable:** fontconfig alias `Rice Mono` → Courier Prime (fonts.conf); used by wofi, mako, GTK, Quickshell (`Theme.font`).
+      kitty stays explicit (Code variant + SemiBold bold). Switch font = fonts.conf + kitty.conf, `fc-cache -f`, restart apps.
+      **Icons:** `scripts/mono-icons.py` → ~/.local/share/icons/Papirus-Mono (places/mimetypes/devices, every hex → luma grey
+      in [#50,#e0], inherits Papirus-Dark for the rest). Re-run after papirus updates.
+- [ ] 11 rest (order): Zen userChrome + Dark Reader (palette, grayscale 100%)
+      → Zotero userChrome + reader appearance theme (grey pages = the "e-ink" look) → Obsidian snippet → cursor.
+      Firefox dropped (Zen is the browser). Per-app e-ink via Hyprland `screen_shader` REJECTED again: it's output-global,
+      a focus-swap hack shades bar/frame/other windows and flickers.
 - [ ] 12 optional analog clock widget (QML Canvas).  - [ ] 13 window border design (user idea: gradient / thematic).
 - [ ] maybe: Lain as small corner icon (Quickshell Image).
 

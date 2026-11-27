@@ -17,7 +17,7 @@ PanelWindow {
     implicitWidth: Theme.bar
     color: Theme.frame                        // frame fill: bar is the frame's left side
 
-    readonly property string textFont: "Courier Prime"
+    readonly property string textFont: Theme.font
     readonly property string iconFont: "ProggyClean CE Nerd Font Mono"
     function glyph(cp) { return String.fromCodePoint(cp) }   // Nerd Font MD icons live in the PUA
 
