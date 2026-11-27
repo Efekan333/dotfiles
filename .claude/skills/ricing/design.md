@@ -32,7 +32,7 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 # System facts (as of 2026-11-27)
 - Hyprland 0.57.2, **Lua config** (`hl.config`, `hl.bind`, …); API stubs: `/usr/share/hypr/stubs/hl.meta.lua`.
 - Quickshell 0.3.2 / Qt 6.12, kitty 0.51.1, wofi 1.5.3, hyprpaper 0.8.5, hyprlock 0.9.7, hypridle 0.1.8, mako 1.11 (D-Bus activated), imagemagick 7.
-- Dotfiles: stow packages `hypr kitty wofi quickshell` (`<pkg>/.config/<pkg>` → `~/.config/<pkg>`), relink with `./stow.sh`.
+- Dotfiles: stow packages `hypr kitty wofi quickshell bash fastfetch fontconfig` (`<pkg>/.config/<pkg>` → `~/.config/<pkg>`), relink with `./stow.sh`.
 - `.claude/` is excluded via `.git/info/exclude` (local, unversioned) except `.claude/skills/ricing/*.md` → design.md + SKILL.md are tracked; ref images are not.
 
 # Progress (handoff — read this first in a new session)
@@ -42,8 +42,12 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
 - [x] 2 hypr look (`core.lua`): no blur/shadow, gaps 10/30, border fg/line, no mascot. Rounding still 10 (borders = step 13).
 - [x] 3 wallpaper: `scripts/recolor-walls.sh` → `~/wallpaper/palette/`; per-workspace switching via `wallpaper.lua` (verified working).
       Mapping ws1 katana, 2 shark, 3 dying_man, 4 angel, 5 woman_blueish, 6 woman_red, 7-10 wrap.
-- [~] 4 kitty: font DONE (Courier Prime Code 12, bold = Courier Prime SemiBold; reload = `kill -USR1 $(pgrep -x kitty)`).
-      TODO: 16 ANSI colors as greys from palette (tradeoff: red/green diff meaning lost → rely on bold/reverse), padding.
+- [x] 4 kitty: Courier Prime Code 12 (bold = Courier Prime SemiBold); `theme.conf` (included) = 16 ANSI as palette greys
+      (red=bright, green/blue/mag/cyan=mid, yellow=fg, slot 8=dim, slot 0=surface), inverted selection, block cursor + cursor_trail.
+      Font was silently Noto until `fontconfig/fonts.conf` marked Courier Prime (Code) spacing=mono (files lack isFixedPitch).
+      fastfetch on kitty open (`bash/.bashrc`, FASTFETCH_SHOWN guard), arch_small logo, colors as raw SGR 90/37/97
+      (fastfetch's bright_* names = bold+normal → slot 0 → invisible). Reload kitty = `kill -USR1 $(pgrep -x kitty)`.
+      Not done (user didn't pick): padding, text_composition_strategy, tab bar styling.
 - [ ] 5 wofi: style.css (palette, square, inverted selection); `menu = "wofi"` in programs.lua; cliphist bind rofi → `wofi --dmenu`.
 - [ ] 6 mako: palette colors/border (currently default blue).
 - [ ] 7 Quickshell left bar v1: shell.qml bug: anchors top+bottom+left but sets implicitHeight → needs implicitWidth;

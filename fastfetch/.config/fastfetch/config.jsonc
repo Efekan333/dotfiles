@@ -1,0 +1,36 @@
+// Colors are raw SGR codes (not hex, not names: fastfetch maps bright_* to bold+normal = invisible in kitty): kitty resolves them through theme.conf (palette.md),
+// so fastfetch follows the palette automatically. 90 = slot 8 dim, 37 = slot 7 fg, 97 = slot 15 bright.
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "builtin",
+    "source": "arch_small",
+    "color": { "1": "97", "2": "37" },
+    "padding": { "left": 2, "right": 3 }
+  },
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "90",
+      "title": "1;97",
+      "output": "37",
+      "separator": "90"
+    }
+  },
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "kernel",
+    "uptime",
+    "shell",
+    "wm",
+    { "type": "terminal", "format": "{pretty-name}" },
+    "terminalfont",
+    { "type": "cpu", "format": "{name}" },
+    { "type": "memory", "format": "{used} / {total}" },
+    { "type": "disk", "folders": "/", "format": "{size-used} / {size-total}" },
+    "break",
+    "colors"
+  ]
+}

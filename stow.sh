@@ -3,5 +3,5 @@
 # Package layout: <pkg>/.config/<pkg>  ->  ~/.config/<pkg>
 set -euo pipefail
 cd "$(dirname "$0")"
-pkgs=(hypr kitty wofi quickshell)
+pkgs=(hypr kitty wofi quickshell bash fastfetch fontconfig)
 stow -v -R -t "$HOME" "${pkgs[@]}"
