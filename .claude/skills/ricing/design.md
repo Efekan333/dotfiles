@@ -99,6 +99,8 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       toolbar/panel greys, AccentColor → fg) with !important (beats the workspace-gradient JS); active tab inverted.
       Var names come from omni.ja zen-styles/zen-theme.css → recheck after big Zen updates.
       Pages: Dark Reader, settings in `zen/darkreader.json` (import manually; grayscale 100, bg/fg = palette).
+      SKIPPED (user, 2026-11-27): about: pages (about:addons, settings) stay navy/accent-coloured; fix would be
+      `userContent.css` scoped with @-moz-document url-prefix("about:"). Dark Reader import not confirmed.
 - [ ] 11 rest (order): Zotero userChrome + reader appearance theme (grey pages = the "e-ink" look) → Obsidian snippet → cursor.
       Firefox dropped (Zen is the browser). Per-app e-ink via Hyprland `screen_shader` REJECTED again: it's output-global,
       a focus-swap hack shades bar/frame/other windows and flickers.
