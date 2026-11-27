@@ -6,7 +6,7 @@
 -- Set programs that you use
 terminal    = "kitty"
 fileManager = "dolphin"
-menu        = "hyprlauncher"
+menu        = "~/.config/wofi/launch.sh"   -- toggle; also opened by Quickshell HotEdge
 
 
 

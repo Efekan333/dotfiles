@@ -30,7 +30,7 @@ Column {
                 width: 26; horizontalAlignment: Text.AlignHCenter
                 text: modelData
                 font { family: root.font; pixelSize: 13; bold: true }
-                color: "#808080"
+                color: "#a8a8a8"
             }
         }
         Repeater {

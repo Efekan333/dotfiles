@@ -35,7 +35,7 @@ hl.config({
 hl.config({
     general = {
         gaps_in  = 10,
-        gaps_out = 30, -- inspo: windows float over lots of wallpaper
+        gaps_out = 12, -- + 8 px Quickshell frame → windows sit close to the frame (Caelestia look)
 
         border_size = 2,
 
@@ -172,6 +172,13 @@ hl.window_rule({
     },
 
     no_focus = true,
+})
+
+-- wofi launcher slides up out of the bottom edge (layer surfaces can't grow from a point like the QML popups)
+hl.layer_rule({
+    name      = "wofi-slide",
+    match     = { namespace = "^wofi$" },
+    animation = "slide bottom",
 })
 
 -- Layer rules also return a handle.

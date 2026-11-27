@@ -7,4 +7,8 @@ ShellRoot {
         model: Quickshell.screens
         LeftBar {}
     }
+    Variants {
+        model: Quickshell.screens
+        Frame {}            // top/right/bottom strips; bottom = launcher hot zone
+    }
 }

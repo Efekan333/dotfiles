@@ -14,12 +14,25 @@ PanelWindow {
 
     // top+bottom+left anchored → compositor sets the height; we only choose the width.
     anchors { top: true; bottom: true; left: true }
-    implicitWidth: 40
-    color: "#0c0c0c"                          // bg
+    implicitWidth: Theme.bar
+    color: Theme.frame                        // frame fill: bar is the frame's left side
 
     readonly property string textFont: "Courier Prime"
     readonly property string iconFont: "ProggyClean CE Nerd Font Mono"
     function glyph(cp) { return String.fromCodePoint(cp) }   // Nerd Font MD icons live in the PUA
+
+    // Popups sit on the bottom strip; snap their top edge to the top of a bar element (smallest one that fits),
+    // so the edge never cuts through an icon. Reads y/height properties → re-evaluates when the stack moves.
+    function snapHeight(h) {
+        const base = bar.height - Theme.border;               // popup bottom edge
+        let best = 0;
+        for (const c of bottomStack.children) {
+            if (!c.visible) continue;
+            const fit = base - (bottomStack.y + c.y);           // height if the top aligns with this element
+            if (fit >= h && (best === 0 || fit < best)) best = fit;
+        }
+        return best || h;
+    }
 
     // lock, then blank the panel; hyprlock stays as the gate when input wakes it
     readonly property string idleCmd:
@@ -36,12 +49,6 @@ PanelWindow {
     // Clock in-process: wakes once per minute instead of fork+exec `date` every second.
     SystemClock { id: clock; precision: SystemClock.Minutes }
 
-    // 1px right edge in `line`: hard rectangular edge like the window borders.
-    Rectangle {
-        anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
-        width: 1; color: "#3a3a3a"
-    }
-
     // Reusable square icon button: dim when off, fg when on, inverted on hover.
     component IconButton: Rectangle {
         id: btn
@@ -57,7 +64,7 @@ PanelWindow {
             anchors.centerIn: parent
             text: btn.icon
             font { family: bar.iconFont; pixelSize: 26 }
-            color: btn.lit ? "#0c0c0c" : (btn.on ? "#d6d6d6" : "#808080")
+            color: btn.lit ? "#0c0c0c" : (btn.on ? "#d6d6d6" : "#a8a8a8")
         }
         MouseArea {
             id: area
@@ -86,7 +93,7 @@ PanelWindow {
                     anchors.centerIn: parent
                     text: ws.modelData.id
                     font { family: bar.textFont; pixelSize: 15; bold: true }
-                    color: ws.modelData.focused ? "#0c0c0c" : "#808080"
+                    color: ws.modelData.focused ? "#0c0c0c" : "#a8a8a8"
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -165,7 +172,7 @@ PanelWindow {
                 anchors.centerIn: parent
                 text: (battery.charging ? "+" : "") + battery.pct
                 font { family: bar.textFont; pixelSize: 15; bold: true }
-                color: battery.low ? "#0c0c0c" : (battery.charging ? "#f0f0f0" : "#808080")
+                color: battery.low ? "#0c0c0c" : (battery.charging ? "#f0f0f0" : "#a8a8a8")
             }
             function check() {
                 if (!visible) return;
@@ -185,12 +192,10 @@ PanelWindow {
             onVisibleChanged: check()
         }
 
-        // status group on a grey plate so it stands out from the bar
+        // status group on a darker plate spanning the full bar width (edge to edge)
         Rectangle {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 32; height: toggles.height + 8
+            width: bar.width; height: toggles.height + 8
             color: "#161616"                              // surface
-            border { width: 1; color: "#3a3a3a" }         // line
             Column {
                 id: toggles
                 anchors.centerIn: parent
@@ -222,12 +227,11 @@ PanelWindow {
     }
 
     // ---- calendar popup (xdg_popup: drawn above all windows, anchored to the bar) ----
-    BlobPopup {
+    DrawerPopup {
         id: calendar
-        source: calendarBtn
-        anchor { window: bar; rect.x: bar.width + 8; rect.y: bar.height - implicitHeight - 10 }
-        implicitWidth: cal.implicitWidth + 32
-        implicitHeight: cal.implicitHeight + 24
+        anchor { window: bar; rect.x: bar.width; rect.y: bar.height - implicitHeight - Theme.border }   // flush to bar + bottom strip
+        boxWidth: cal.implicitWidth + 32
+        boxHeight: bar.snapHeight(cal.implicitHeight + 24)
 
         Calendar { id: cal; anchors.centerIn: parent; date: clock.date; font: bar.textFont }
     }
@@ -236,12 +240,11 @@ PanelWindow {
     // shutdown/logout go through hyprshutdown: it sends xdg_toplevel.close to every window (= SUPER+C),
     // waits for them to exit (save dialogs block it), then exits Hyprland and runs the post command.
     // Plain `systemctl poweroff` would SIGTERM the session cgroup instead → no save prompts, "crashed" Firefox.
-    BlobPopup {
+    DrawerPopup {
         id: powerMenu
-        source: powerBtn
-        anchor { window: bar; rect.x: bar.width + 8; rect.y: bar.height - implicitHeight - 10 }
-        implicitWidth: actions.implicitWidth + 16
-        implicitHeight: actions.implicitHeight + 16
+        anchor { window: bar; rect.x: bar.width; rect.y: bar.height - implicitHeight - Theme.border }   // flush to bar + bottom strip
+        boxWidth: actions.implicitWidth + 16
+        boxHeight: bar.snapHeight(actions.implicitHeight + 16)
 
         Column {
             id: actions

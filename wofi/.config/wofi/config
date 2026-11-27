@@ -1,5 +1,8 @@
-show=drun
-width=500
-height=400
-prompt=Search
-allow_images=true
+width=600
+lines=8
+dynamic_lines=true
+y=-16
+insensitive=true
+no_actions=true
+hide_scroll=true
+allow_images=false

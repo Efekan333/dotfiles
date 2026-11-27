@@ -19,4 +19,10 @@ description: Use when designing or changing my Hyprland, Quickshell, Kitty or Wo
 - Before ending a session or when I ask: update the Progress section in design.md so the next session can continue from it.
 
 # Paths
-- Wallpaper sources: `~/wallpaper/` (copies in `rice-refs/wallpaper/`). Inspo: `rice-refs/inspiration_screenshots/`.
+- Refs root: `.claude/skills/ricing/rice-refs/` (untracked). Wallpaper sources: `~/wallpaper/` (copies in `rice-refs/wallpaper/`).
+  Inspo: `rice-refs/inspiration_screenshots/`. Caelestia shell source (frame/drawer reference): `rice-refs/shell/`.
+- Quickshell shared values: `quickshell/.config/quickshell/Theme.qml`; wofi duplicates the frame colour in `style.css`.
+
+# Verification gotchas
+- Quickshell hot-reloads on save; a "Failed to load" right after a write is usually a half-written file → check the next reload line.
+- Popups only open on a real click → can't screenshot them; say so and let me check.

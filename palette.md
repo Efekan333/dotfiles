@@ -7,6 +7,7 @@ Contrast = WCAG ratio vs `bg`. Text needs ≥ 4.5.
 |---------|-----------|-------|----------------------------------------------------------|
 | bg      | `#0c0c0c` | 1.0   | window/terminal/bar background                           |
 | surface | `#161616` | 1.1   | raised panels, hover bg, inactive tabs (never for text)  |
+| frame   | `#262626` | 1.4   | Quickshell frame/bar/drawers + wofi fill (Theme.qml)     |
 | line    | `#3a3a3a` | 1.7   | inactive borders, separators (never for text)            |
 | dim     | `#808080` | 5.0   | secondary text: comments, inactive workspaces, hints     |
 | mid     | `#a8a8a8` | 8.2   | tertiary emphasis, active-but-unfocused border           |

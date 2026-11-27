@@ -30,7 +30,7 @@ hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 --hl.bind(mainMod .. "+ V", hl.dsp.exec_cmd("hyprshot -m output -o ~/Screenshots"))
 
 -- clipboard history menu
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("~/.config/wofi/clip.sh"))
 
 -- screenshots
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots"))

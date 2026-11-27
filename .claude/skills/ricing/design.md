@@ -8,13 +8,17 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 3. **Retro / old-terminal / ASCII vibe.** Wallpapers are my ASCII-art images, recolored to the palette.
 4. **Font:** Courier-style serif mono. Nimbus Mono PS Regular is hairline-thin → too faint for `dim` text; prefer its Bold weight or Courier Prime (heavier strokes).
 5. **Everything matches.** Firefox, Obsidian, Dolphin, GTK/Qt apps follow the palette so nothing breaks immersion. No global e-ink shader (overkill).
-6. **Launcher:** wofi only (no rofi/hyprlauncher).
+6. **Launcher:** wofi only (no rofi/hyprlauncher). Rejected a Quickshell-native launcher; consequence: wofi can't get the
+   concave frame joins (separate GTK surface) — revisit only if seamless wofi fusion becomes a must.
 7. **Window borders:** undecided. Idea: gradient or something thematic. Decide after palette + wallpaper exist.
 
 # Widgets I want (Quickshell)
 - **Left bar:** time + workspaces. Text-only.
 - **Power widget:** transparent; actions = lock, screen off (idle), suspend, power off.
 - **All widgets animated:** on hover they grow and reveal more info.
+- **Frame look (Caelestia, `rice-refs/shell`):** bar + 8 px strips around the screen in one fill (#262626), rounded inner
+  corners; every popup/launcher is fused to the frame (same fill, no outline, rounded outer corner, concave joins)
+  and its edges snap to bar-element edges (never cut through an icon).
 
 # What defines the inspo (rice-refs/inspiration_screenshots)
 - Duotone: one bg + one fg. Highlight = inversion (swap fg/bg) for active workspace, selection, status lines.
@@ -28,6 +32,9 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 # Refs layout
 - `rice-refs/wallpaper/` originals (source: `~/wallpaper/`), `wallpaper/monochrome_filter/` greyscale versions.
 - `rice-refs/inspiration_screenshots/` 7 shots. `rice-refs/BAREBLOOD/` full KDE theme repo.
+- `rice-refs/shell/` = Caelestia shell source (Quickshell). Frame logic: `modules/drawers/` (ContentWindow = one fullscreen
+  surface + input mask + SDF blobs, Exclusions = 1×1 exclusiveZone windows, Regions = mask). Launcher in `modules/launcher/`.
+- All refs live in `.claude/skills/ricing/rice-refs/` (untracked).
 
 # System facts (as of 2026-11-27)
 - Hyprland 0.57.2, **Lua config** (`hl.config`, `hl.bind`, …); API stubs: `/usr/share/hypr/stubs/hl.meta.lua`.
@@ -41,24 +48,38 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
 - [x] 1 palette: `palette.md` (bg #0c0c0c, surface #161616, line #3a3a3a, dim #808080, mid #a8a8a8, fg #d6d6d6, bright #f0f0f0).
 - [x] 2 hypr look (`core.lua`): no blur/shadow, gaps 10/30, border fg/line, no mascot. Rounding still 10 (borders = step 13).
 - [x] 3 wallpaper: `scripts/recolor-walls.sh` → `~/wallpaper/palette/`; per-workspace switching via `wallpaper.lua` (verified working).
-      Mapping ws1 katana, 2 shark, 3 dying_man, 4 angel, 5 woman_blueish, 6-10 wrap (woman_red dropped: darker duplicate).
+      Mapping ws1 angel, 2 woman_blueish, 3 dying_man, 4 katana, 5 shark, 6-10 wrap (hyprpaper.conf start = angel) (woman_red dropped: darker duplicate).
 - [x] 4 kitty: Courier Prime Code 12 (bold = Courier Prime SemiBold); `theme.conf` (included) = 16 ANSI as palette greys
       (red=bright, green/blue/mag/cyan=mid, yellow=fg, slot 8=dim, slot 0=surface), inverted selection, block cursor + cursor_trail.
       Font was silently Noto until `fontconfig/fonts.conf` marked Courier Prime (Code) spacing=mono (files lack isFixedPitch).
       fastfetch on kitty open (`bash/.bashrc`, FASTFETCH_SHOWN guard), arch_small logo, colors as raw SGR 90/37/97
       (fastfetch's bright_* names = bold+normal → slot 0 → invisible). Reload kitty = `kill -USR1 $(pgrep -x kitty)`.
       Not done (user didn't pick): padding, text_composition_strategy, tab bar styling.
-- [ ] 5 wofi: style.css (palette, square, inverted selection); `menu = "wofi"` in programs.lua; cliphist bind rofi → `wofi --dmenu`.
+- [x] 5 wofi = bottom launcher: `wofi/launch.sh` (dmenu + fuzzy; app names cached in ~/.cache/wofi-apps, rebuilt when an
+      applications dir mtime is newer; 0 matches or "?" prefix → Google in zen-browser; `--open` = no toggle). Opened by SUPER+R
+      (toggle) and the Frame bottom strip. `clip.sh` = cliphist via print_line_num.
+      style.css: fill = frame colour (hardcoded, keep in sync with Theme.qml), no outline; y=-16 → flush on the bottom strip
+      (wofi adds 16 px and also respects the strip's exclusive zone). Hypr layer rule `slide bottom` on ns wofi.
+      TODO later: monochrome ASCII-style icons for important apps (dmenu supports `img:<path>:text:<name>` + allow_images).
 - [ ] 6 mako: palette colors/border (currently default blue).
 - [x] 7 Quickshell left bar v1 (`LeftBar.qml`, 40px, opaque bg + 1px line edge): workspaces via Hyprland.workspaces (focused = inverted, click = activate),
       SystemClock (Minutes) HH over MM at bottom; autostart `qs` on hyprland.start (programs.lua). Order changed: Quickshell before wofi/mako.
-      v2 (caelestia/soramane layout, squared): bottom-up power (2-click arm, 3 s) · [wifi bt] on surface plate w/ line border
+      v2 (caelestia/soramane layout, squared): bottom-up power · [wifi bt] on full-width surface plate (no border)
       (Quickshell.Networking/Bluetooth over D-Bus, click toggles radio) · clock · calendar btn → PopupWindow + `Calendar.qml`
       (Mon-first grid, today inverted, HyprlandFocusGrab closes on outside click). Icons = ProggyClean CE Nerd Font Mono 26px.
       Qt warning: quickshell 0.3.2-1 built vs Qt 6.12.0, system 6.12.1 → reinstall doesn't fix, needs repo rebuild.
-- [x] 7b popup animation: `BlobPopup.qml` (calendar + power) scales 0.1→1 from the source icon centre (Scale.origin via mapToItem at open),
-      OutBack 260 ms open / InCubic 140 ms close, unmap after close anim. Drive `open`, never `visible`.
-- [ ] 7c hypr windowsIn blob (Plan B, not done): `popin 60%` + underdamped spring (ζ≈0.55–0.6, k=300 c≈19); windowsOut linear no bounce.
+- [x] 7b frame (Caelestia architecture, squared strips): `Theme.qml` singleton (frame #262626 = palette `frame`, bar 40, border 8,
+      rounding 16). `Frame.qml` = ONE fullscreen surface (exclusionMode Ignore → fixed geometry; separate strip surfaces moved on
+      hot reload because layer arrange order changed) drawing top/right/bottom strips + 4 `Fillet.qml` concave inner corners
+      (Canvas, drawn top-left, rotated); input mask = strips only. 3 invisible 1×1 `frame-exclusion` windows carry exclusiveZone 8
+      → `hyprctl monitors` reserved [40,8,8,8]. Bottom strip = launcher hot zone (250 ms dwell). Bar fill = Theme.frame.
+      Popups = `DrawerPopup.qml` (callers set boxWidth/boxHeight): flush to bar + bottom strip, frame fill, topRightRadius 16,
+      concave Fillets at bar↔top and right↔bottom strip (surface +R top/right, mask = box), slide out from behind the bar
+      (OutQuint 240 ms, clip), unmap after close anim; drive `open`, never `visible`. Height snapped by `bar.snapHeight(h)` to the
+      top of a bottomStack element (property-based → reactive). BlobPopup (scale + overshoot) dropped: gap to the bar.
+      Tried: frame #3a3a3a (too light), #0c0c0c (vanishes into wallpaper). Dim text on frame #808080 → #a8a8a8. gaps_out 30 → 12.
+      Popup visuals verified only via config load — user clicks to check.
+      Next idea: wofi `border-radius` on top corners (joins to the strip stay square).- [ ] 7c hypr windowsIn blob (Plan B, not done): `popin 60%` + underdamped spring (ζ≈0.55–0.6, k=300 c≈19); windowsOut linear no bounce.
 - [ ] 8 bar hover-expand animation (Behavior/NumberAnimation); keep exclusiveZone fixed so expansion overlays, no window reflow.
 - [ ] 9 power widget: transparent, hover-expand → lock (hyprlock) / screen off (dpms off) / suspend / poweroff; hypridle config.
 - [ ] 10 hyprlock theme.  - [ ] 11 apps one by one: GTK3/4, Dolphin (kdeglobals), Firefox userChrome, Obsidian snippet, cursor.
