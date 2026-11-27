@@ -56,7 +56,7 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       (fastfetch's bright_* names = bold+normal → slot 0 → invisible). Reload kitty = `kill -USR1 $(pgrep -x kitty)`.
       Not done (user didn't pick): padding, text_composition_strategy, tab bar styling.
 - [x] 5 wofi = bottom launcher: `wofi/launch.sh` (dmenu + fuzzy; app names cached in ~/.cache/wofi-apps, rebuilt when an
-      applications dir mtime is newer; 0 matches or "?" prefix → Google in zen-browser; `--open` = no toggle). Opened by SUPER+R
+      applications dir mtime is newer; 0 matches or "?" prefix → Google in zen-browser; `--open` = no toggle). Opened by SUPER+SPACE
       (toggle) and the Frame bottom strip. `clip.sh` = cliphist via print_line_num.
       style.css: fill = frame colour (hardcoded, keep in sync with Theme.qml), no outline; y=-16 → flush on the bottom strip
       (wofi adds 16 px and also respects the strip's exclusive zone). Hypr layer rule `slide bottom` on ns wofi.
@@ -101,7 +101,14 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       Pages: Dark Reader, settings in `zen/darkreader.json` (import manually; grayscale 100, bg/fg = palette).
       SKIPPED (user, 2026-11-27): about: pages (about:addons, settings) stay navy/accent-coloured; fix would be
       `userContent.css` scoped with @-moz-document url-prefix("about:"). Dark Reader import not confirmed.
-- [ ] 11 rest (order): Zotero userChrome + reader appearance theme (grey pages = the "e-ink" look) → Obsidian snippet → cursor.
+- [ ] 11c Zotero (NEXT; zotero-bin 9.0.4, Firefox/Gecko-based → same mechanism as Zen):
+      profile = ~/.zotero/zotero/<random>.default (profiles.ini) → extend `link-zen.sh`-style linking (or a link-zotero.sh).
+      user.js: toolkit.legacyUserProfileCustomizations.stylesheets = true (+ dark scheme pref).
+      chrome/userChrome.css: palette greys for item tree, collections pane, item pane, tabs; selection = inversion.
+      Reader "e-ink": Zotero's reader appearance/theme setting (bg/fg per theme) → grey page bg + fg text; verify that
+      custom themes exist in v9 before relying on it. Fallback = reader-only CSS filter (grayscale + invert) in userContent.
+      Global screen_shader stays rejected.
+- [ ] 11 rest (order): Obsidian snippet → cursor.
       Firefox dropped (Zen is the browser). Per-app e-ink via Hyprland `screen_shader` REJECTED again: it's output-global,
       a focus-swap hack shades bar/frame/other windows and flickers.
 - [ ] 12 optional analog clock widget (QML Canvas).  - [ ] 13 window border design (user idea: gradient / thematic).
@@ -114,6 +121,9 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
 - REJECTED: edge-mode ASCII (strong `\ | / -` chars) → user hated it. Thinning glyphs by erosion → breaks letters. Inverted renders → wall of chars.
 - Per-workspace wallpaper: `hl.on("workspace.active", fn(ws))` — callback gets the workspace object (ws.id, ws.monitor.name, ws.special).
   hyprpaper = systemd user unit; check with `hyprctl hyprpaper listactive`; logs `journalctl --user -u hyprpaper`.
+- Hypr extras (user, 2026-11-27): launcher bind SUPER+SPACE (was SUPER+R), SUPER+F float toggle; active/inactive opacity 0.92
+  (kitty override 1.0 + its own background_opacity 0.85 → opaque text; YouTube/Netflix titles opaque; fullscreen 1.0);
+  built-in wobble (0.57) on floating windows only (rule no-wobble-tiled); touchpad tap/drag/drag_lock; border grab 25 px.
 - Gotchas: sudo needs a real terminal (the `!` prefix has no TTY) → user runs sudo in kitty. Never `pkill -f <pattern>` from a shell
   whose own cmdline contains the pattern. ImageMagick label text: avoid `%`, double `\`.
 - Lain (`wallhaven-lain.png`): not a wallpaper. Maybe later as a small corner icon/widget. Undecided.

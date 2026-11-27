@@ -46,6 +46,7 @@ hl.config({
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
         resize_on_border = true,
+        extend_border_grab_area = 25, -- px past the border that still grabs (default 15)
 
         -- Please see https://wiki.hypr.land/configuring/extra/tearing/ before you turn this on
         allow_tearing = false,
@@ -58,8 +59,10 @@ hl.config({
         rounding_power = 2,
 
         -- Change transparency of focused and unfocused windows
-        active_opacity   = 1.0,
-        inactive_opacity = 1.0,
+        -- multiplies the whole surface (text too) → kept mild; kitty fades only its bg instead (rule below)
+        active_opacity     = 0.92,
+        inactive_opacity   = 0.92,
+        fullscreen_opacity = 1.0, -- fullscreen video/images: no wallpaper bleed
 
         shadow = {
             enabled      = false, -- flat, printed look
@@ -69,10 +72,20 @@ hl.config({
         },
 
         blur = {
-            enabled   = false, -- no frosted glass; also saves GPU passes
+            enabled   = false, -- tried light blur with transparency; testing without
             size      = 3,
             passes    = 1,
             vibrancy  = 0.1696,
+        },
+
+        -- built-in (0.57) Compiz-style spring mesh; tiled windows opt out via the no-wobble-tiled rule
+        wobble = {
+            enabled   = true,
+            mesh      = 16,   -- vertices per edge: smoother bend, a bit more GPU
+            stiffness = 180,  -- lower = looser jelly
+            damping   = 10,   -- lower = wobbles longer (default 12)
+            mass      = 1,
+            intensity = 0.35, -- default 0.2 is subtle
         },
     },
 
@@ -150,6 +163,13 @@ hl.config({
 
 -- Example window rules that are useful
 
+hl.window_rule({
+    -- wobble only floating windows; layout moves of tiled windows would jiggle the whole tree
+    name  = "no-wobble-tiled",
+    match = { float = false },
+    no_wobble = true,
+})
+
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.
     name  = "suppress-maximize-events",
@@ -172,6 +192,20 @@ hl.window_rule({
     },
 
     no_focus = true,
+})
+
+-- Transparency exceptions. "override" = exact value instead of multiplying with active/inactive_opacity.
+-- kitty: Hyprland opacity 1, kitty's own background_opacity fades only the bg → glyphs stay fully opaque.
+hl.window_rule({
+    name    = "opaque-kitty",
+    match   = { class = "^kitty$" },
+    opacity = "1.0 override 1.0 override",
+})
+-- Video sites: browser title = active tab title; rules re-evaluate on title change → toggles with the tab.
+hl.window_rule({
+    name    = "opaque-video-sites",
+    match   = { title = ".*(YouTube|Netflix).*" },
+    opacity = "1.0 override 1.0 override",
 })
 
 -- wofi launcher slides up out of the bottom edge (layer surfaces can't grow from a point like the QML popups)

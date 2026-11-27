@@ -24,6 +24,11 @@ hl.config({
 
         touchpad = {
             natural_scroll = false,
+            -- libinput turns tap → tap-hold → slide into a held LMB, so border-resize and
+            -- SUPER+drag work from the touchpad like a real button
+            tap_to_click = true,
+            tap_and_drag = true,
+            drag_lock    = 1, -- lift finger mid-drag briefly (timeout) without dropping the window
         },
     },
 })
