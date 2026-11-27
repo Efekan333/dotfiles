@@ -1,0 +1,28 @@
+# mako — palette.md greys, Theme.qml frame fill. Reload: makoctl reload
+font=Courier Prime 12
+background-color=#262626
+text-color=#d6d6d6
+border-color=#3a3a3a
+border-size=1
+border-radius=10
+progress-color=over #3a3a3a
+
+# no app icons (kitty/Claude Code notifications carry desktop-entry=kitty)
+icons=0
+
+anchor=top-right
+outer-margin=12
+margin=8
+padding=12,16
+width=360
+max-visible=4
+default-timeout=5000
+format=<b>%s</b>\n%b
+
+[urgency=low]
+text-color=#a8a8a8
+
+[urgency=critical]
+border-color=#f0f0f0
+text-color=#f0f0f0
+default-timeout=0

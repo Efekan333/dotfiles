@@ -39,7 +39,7 @@ description: My taste, decisions, inspo summary and system facts for ricing. Rea
 # System facts (as of 2026-11-27)
 - Hyprland 0.57.2, **Lua config** (`hl.config`, `hl.bind`, …); API stubs: `/usr/share/hypr/stubs/hl.meta.lua`.
 - Quickshell 0.3.2 / Qt 6.12, kitty 0.51.1, wofi 1.5.3, hyprpaper 0.8.5, hyprlock 0.9.7, hypridle 0.1.8, mako 1.11 (D-Bus activated), imagemagick 7.
-- Dotfiles: stow packages `hypr kitty wofi quickshell bash fastfetch fontconfig` (`<pkg>/.config/<pkg>` → `~/.config/<pkg>`), relink with `./stow.sh`.
+- Dotfiles: stow packages `hypr kitty wofi quickshell bash fastfetch fontconfig mako` (`<pkg>/.config/<pkg>` → `~/.config/<pkg>`), relink with `./stow.sh`.
 - `.claude/` is excluded via `.git/info/exclude` (local, unversioned) except `.claude/skills/ricing/*.md` → design.md + SKILL.md are tracked; ref images are not.
 
 # Progress (handoff — read this first in a new session)
@@ -61,7 +61,8 @@ Workflow: user dictates each step; do only that, verify (reload + screenshot via
       style.css: fill = frame colour (hardcoded, keep in sync with Theme.qml), no outline; y=-16 → flush on the bottom strip
       (wofi adds 16 px and also respects the strip's exclusive zone). Hypr layer rule `slide bottom` on ns wofi.
       TODO later: monochrome ASCII-style icons for important apps (dmenu supports `img:<path>:text:<name>` + allow_images).
-- [ ] 6 mako: palette colors/border (currently default blue).
+- [x] 6 mako (`mako/.config/mako/config`, stow pkg): frame #262626 fill, 1px line border, radius 10, Courier Prime 12,
+      `icons=0` (kitty icon came from desktop-entry=kitty on Claude Code notifs), top-right, low=mid text, critical=bright border+text, no timeout.
 - [x] 7 Quickshell left bar v1 (`LeftBar.qml`, 40px, opaque bg + 1px line edge): workspaces via Hyprland.workspaces (focused = inverted, click = activate),
       SystemClock (Minutes) HH over MM at bottom; autostart `qs` on hyprland.start (programs.lua). Order changed: Quickshell before wofi/mako.
       v2 (caelestia/soramane layout, squared): bottom-up power · [wifi bt] on full-width surface plate (no border)
